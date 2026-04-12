@@ -1,0 +1,51 @@
+# =============================================================================
+# Django CRM — .gitignore
+# Standard Python/Django gitignore based on github/gitignore
+# =============================================================================
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ---------- Virtual Environments ----------
+venv/
+env/
+.venv/
+.env
+
+# ---------- Distribution / Packaging ----------
+dist/
+build/
+*.egg-info/
+*.egg
+
+# ---------- Django ----------
+db.sqlite3
+db.sqlite3-journal
+*.log
+staticfiles/
+media/
+
+# ---------- IDE / Editor ----------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---------- Testing / Coverage ----------
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+
+# ---------- OS ----------
+*.bak
+*.tmp
