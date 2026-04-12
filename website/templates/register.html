@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account — Elderco CRM{% endblock %}
+
+{% block content %}
+<div class="glass-panel form-container fade-in">
+  <h2>Create Account</h2>
+  <p class="form-subtitle">Join Elderco CRM today</p>
+  <form method="POST" action="{% url 'website:register' %}" id="register-form">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary btn-glow btn-full" id="register-submit">Create Account</button>
+  </form>
+  <p class="form-footer">
+    Already have an account? <a href="{% url 'website:home' %}">Sign in</a>
+  </p>
+</div>
+{% endblock %}

@@ -1,6 +1,126 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<h1>helloworld!</h1>
+{% block title %}Customer Records — Elderco CRM{% endblock %}
 
+{% block content %}
+  {% if user.is_authenticated %}
+    <div class="dashboard-header">
+      <div>
+        <h1 class="page-title">Customer Records</h1>
+        <p class="page-subtitle">
+          <span class="record-count-badge">{{ records|length }}</span> total records
+        </p>
+      </div>
+      <form method="GET" action="{% url 'website:home' %}" class="search-form" id="search-form">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" name="q" class="search-input" placeholder="Search records..." value="{{ query|default:'' }}" id="search-input" aria-label="Search records">
+          {% if query %}
+            <a href="{% url 'website:home' %}" class="search-clear" title="Clear search">×</a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <div class="glass-panel table-panel fade-in">
+      <div class="table-wrapper">
+        <table id="records-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if records %}
+              {% for record in records %}
+                <tr class="table-row-animate" style="animation-delay: {{ forloop.counter0 }}00ms;">
+                  <td>
+                    <div class="cell-name">
+                      <span class="cell-avatar">{{ record.first_name.0|upper }}</span>
+                      {{ record.first_name }} {{ record.last_name }}
+                    </div>
+                  </td>
+                  <td><span class="cell-muted">{{ record.email }}</span></td>
+                  <td>{{ record.phone }}</td>
+                  <td>{{ record.city }}</td>
+                  <td><span class="badge badge-state">{{ record.state }}</span></td>
+                  <td><span class="cell-muted">{{ record.created_at|date:"M d, Y" }}</span></td>
+                  <td>
+                    <div class="action-group">
+                      <a href="{% url 'website:record' record.id %}" class="action-btn action-view" title="View">
+                        <span>👁</span>
+                      </a>
+                      <a href="{% url 'website:update_record' record.id %}" class="action-btn action-edit" title="Edit">
+                        <span>✎</span>
+                      </a>
+                      <form method="POST" action="{% url 'website:delete_record' record.id %}" style="display:inline;" onsubmit="return confirm('Delete {{ record.first_name }} {{ record.last_name }}?');">
+                        {% csrf_token %}
+                        <button type="submit" class="action-btn action-delete" title="Delete">
+                          <span>🗑</span>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="7" class="empty-state">
+                  <div class="empty-state-content">
+                    <span class="empty-icon">📋</span>
+                    <h3>No records found</h3>
+                    {% if query %}
+                      <p>No results for "<strong>{{ query }}</strong>". Try a different search.</p>
+                      <a href="{% url 'website:home' %}" class="btn btn-secondary">Clear Search</a>
+                    {% else %}
+                      <p>Get started by adding your first customer record.</p>
+                      <a href="{% url 'website:add_record' %}" class="btn btn-primary btn-glow">+ Add Record</a>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="hero fade-in">
+      <div class="hero-badge">✦ Modern CRM Platform</div>
+      <h1 class="hero-title">
+        Manage Customers<br>
+        <span class="gradient-text">Effortlessly.</span>
+      </h1>
+      <p class="hero-subtitle">
+        A sleek, modern way to manage your customer relationships.<br>
+        Track contacts, organize data, and grow your business.
+      </p>
+
+      <div class="glass-panel form-container hero-form fade-in-delayed">
+        <h2>Welcome Back</h2>
+        <p class="form-subtitle">Sign in to your account</p>
+        <form method="POST" action="{% url 'website:home' %}" id="login-form">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label" for="login-username">Username</label>
+            <input type="text" class="form-control" name="username" id="login-username" placeholder="Enter Username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">Password</label>
+            <input type="password" class="form-control" name="password" id="login-password" placeholder="Enter Password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-glow btn-full" id="login-submit">Sign In</button>
+        </form>
+        <p class="form-footer">
+          Don't have an account? <a href="{% url 'website:register' %}">Create one</a>
+        </p>
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}

@@ -1,15 +1,74 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Django CRM</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">  
+    <meta name="description" content="Elderco CRM — A modern customer relationship management system. Manage contacts, track interactions, and grow your business.">
+    <title>{% block title %}Elderco CRM{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
   </head>
   <body>
-    {% block content %}
-    {% endblock %}
+    <!-- Animated background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>    
+    <nav class="navbar glass-panel" id="main-nav" aria-label="Main navigation">
+      <div class="nav-brand">
+        <a href="{% url 'website:home' %}">
+          <span class="brand-icon">⬡</span> Elderco CRM
+        </a>
+      </div>
+      <div class="nav-links">
+        {% if user.is_authenticated %}
+          <span class="nav-item nav-greeting">
+            <span class="avatar">{{ user.username.0|upper }}</span>
+            {{ user.username }}
+          </span>
+          <a href="{% url 'website:add_record' %}" class="btn btn-primary btn-glow" id="nav-add-record">
+            <span class="btn-icon">+</span> Add Record
+          </a>
+          <form method="POST" action="{% url 'website:logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary" id="nav-logout">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'website:register' %}" class="btn btn-primary btn-glow" id="nav-register">Register</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <main class="container" role="main">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}" id="alert-{{ forloop.counter }}" role="alert">
+            <span class="alert-icon">{% if message.tags == 'success' %}✓{% else %}✕{% endif %}</span>
+            {{ message }}
+            <button class="alert-close" onclick="this.parentElement.remove()" aria-label="Dismiss alert">×</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% block content %}
+      {% endblock %}
+    </main>
+
+    <footer class="footer glass-panel">
+      <div class="footer-content">
+        <span class="footer-brand">⬡ Elderco CRM</span>
+        <span class="footer-text">Built with Django · {{ user.username|default:"Guest" }}</span>
+      </div>
+    </footer>
+
+    <script>
+      // Auto-dismiss alerts after 4 seconds with staggered timing
+      document.querySelectorAll('.alert').forEach((alert, i) => {
+        setTimeout(() => {
+          alert.style.animation = 'slideOutUp 0.4s ease-in forwards';
+          setTimeout(() => alert.remove(), 400);
+        }, 4000 + i * 500);
+      });
+    </script>
   </body>
 </html>

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ customer_record }} — Elderco CRM{% endblock %}
+
+{% block content %}
+<div class="glass-panel detail-card fade-in">
+  <div class="detail-header">
+    <div>
+      <h2>Customer Detail</h2>
+      <p class="text-muted">ID #{{ customer_record.id }} · Added {{ customer_record.created_at|date:"M d, Y" }}</p>
+    </div>
+    <span class="detail-avatar">{{ customer_record.first_name.0|upper }}{{ customer_record.last_name.0|upper }}</span>
+  </div>
+
+  <div class="detail-grid">
+    <div class="detail-row">
+      <div class="detail-icon">👤</div>
+      <div>
+        <div class="detail-label">Full Name</div>
+        <div class="detail-value">{{ customer_record.first_name }} {{ customer_record.last_name }}</div>
+      </div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">✉</div>
+      <div>
+        <div class="detail-label">Email</div>
+        <div class="detail-value">{{ customer_record.email }}</div>
+      </div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">📞</div>
+      <div>
+        <div class="detail-label">Phone</div>
+        <div class="detail-value">{{ customer_record.phone }}</div>
+      </div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-icon">📍</div>
+      <div>
+        <div class="detail-label">Address</div>
+        <div class="detail-value">{{ customer_record.address }}, {{ customer_record.city }}, {{ customer_record.state }} {{ customer_record.zipcode }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <a href="{% url 'website:home' %}" class="btn btn-secondary">← Back</a>
+    <a href="{% url 'website:update_record' customer_record.id %}" class="btn btn-primary btn-glow">✎ Edit</a>
+    <form method="POST" action="{% url 'website:delete_record' customer_record.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete {{ customer_record.first_name }} {{ customer_record.last_name }}? This action cannot be undone.');">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">🗑 Delete</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

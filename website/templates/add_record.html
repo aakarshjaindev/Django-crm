@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Record — Elderco CRM{% endblock %}
+
+{% block content %}
+<div class="glass-panel form-container fade-in">
+  <h2>Add New Record</h2>
+  <p class="form-subtitle">Enter customer details below</p>
+  <form method="POST" action="{% url 'website:add_record' %}" id="add-record-form">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      </div>
+    {% endfor %}
+    <div class="form-actions">
+      <a href="{% url 'website:home' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary btn-glow" id="add-record-submit">Save Record</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

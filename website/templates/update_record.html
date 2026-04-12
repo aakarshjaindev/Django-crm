@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Record — Elderco CRM{% endblock %}
+
+{% block content %}
+<div class="glass-panel form-container fade-in">
+  <h2>Update Record</h2>
+  <p class="form-subtitle">Modify customer information</p>
+  <form method="POST" action="" id="update-record-form">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      </div>
+    {% endfor %}
+    <div class="form-actions">
+      <a href="{% url 'website:home' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-primary btn-glow" id="update-record-submit">Update Record</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
