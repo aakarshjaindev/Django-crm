@@ -7,7 +7,7 @@ core functionality works correctly.
 
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
-from django.urls import resolve, reverse
+from django.urls import resolve, reverse    
 
 from .forms import RecordForm, SignUpForm
 from .models import Record
